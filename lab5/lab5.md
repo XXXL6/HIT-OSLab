@@ -201,7 +201,7 @@ void cpuio_bound(int last, int cpu_time, int io_time)
 
 将`process.c`放入Linux0.11中编译并运行，测试结果如下：
 
-![](.\images\Snipaste_2025-11-17_19-42-43.png)
+![](./images/Snipaste_2025-11-17_19-42-43.png)
 
 ### 3.2. log文件准备工作
 
@@ -533,15 +533,15 @@ sudo umount hdc
 
 打开`procss.log`，查看其中的内容，五中状态均有打印，如下图：
 
-![](.\images\Snipaste_2025-11-18_11-34-37.png)
+![](./images/Snipaste_2025-11-18_11-34-37.png)
 
 使用`tail -n 50 process.log > last.txt` 查看`process.log`最后50行的内容，如下图，可以看到也有其他进程建立和运行：
 
-![](.\images\Snipaste_2025-11-18_11-37-51.png)
+![](./images/Snipaste_2025-11-18_11-37-51.png)
 
 接下来，统计该程序建立的所有进程的等待时间、完成时间（周转时间）和运行时间，并计算平均等待时间，平均完成时间和吞吐量。运行 `./stat_log.py process.log 0 1 2 3 4 5 -g` （只统计 `PID` 为 `0` 、 `1` 、 `2` 、 `3` 、 `4` 和 `5` 的进程），得到结果如下图：
 
-![](.\images\Snipaste_2025-11-18_11-40-28.png)
+![](./images/Snipaste_2025-11-18_11-40-28.png)
 
 ### 3.5. 修改时间片
 
@@ -555,13 +555,13 @@ sudo umount hdc
 
 分别将时间片修改为5，10，25，40，并使用`stat_log.py`进行统计，结果依次如下：
 
-![](.\images\Snipaste_2025-11-18_12-08-10.png)
+![](./images/Snipaste_2025-11-18_12-08-10.png)
 
-![](E:\HitOSlab\lab5\images\Snipaste_2025-11-18_11-55-37.png)
+![](./images/Snipaste_2025-11-18_11-55-37.png)
 
-![](.\images\Snipaste_2025-11-18_11-58-11.png)
+![](./images/Snipaste_2025-11-18_11-58-11.png)
 
-![](.\images\Snipaste_2025-11-18_12-04-25.png)
+![](./images/Snipaste_2025-11-18_12-04-25.png)
 
 ## 4. 实验报告
 
