@@ -59,19 +59,19 @@ int whoami(char* name, unsigned int size);
 
 该实验新增了两个系统调用，所以要添加新的系统调用号，还要修改系统调用总数。 进入 `include` 目录，打开 `unistd.h`文件 ，增添新的系统调用编号，如下图：
 
-![image-20251030143643037](.\images\image-20251030143643037.png)
+![image-20251030143643037](./images/image-20251030143643037.png)
 
 #### 2. 在 `kernel/system_call.s` 修改系统调用总数
 
 `system_call.s`中的`nr_system_calls` 记录了系统调用的总数，用于在系统调用入口处检查调用号的有效性。我们添加了两个新的系统调用，因此应当修改此宏定义；这样，系统调用处理程序在处理 `int 0x80` 中断时，就能正确地识别并调用新的系统调用。如下图：
 
-![](.\images\Snipaste_2025-10-30_14-40-26.png)
+![](./images/Snipaste_2025-10-30_14-40-26.png)
 
 #### 3. 维护新的系统调用表
 
 中断处理函数根据系统调用号，调用对应的内核函数，所以要为新增的系统调用添加系统调用函数名并维护系统调用表。在` /include/linux` 目录下，`sys.h`文件中记录了系统调用表。系统调用表是一个函数指针数组，内核通过系统调用号在这个数组中查找对应的系统调用函数，在 `sys_call_table` 系统调用表中添加 `sys_iam` 和 `sys_whoami`，并确保它们的位置与系统调用号一致。如下图：
 
-![](.\images\Snipaste_2025-10-30_14-46-35.png)
+![](./images/Snipaste_2025-10-30_14-46-35.png)
 
 ### 3.2. 实现两个系统调用函数
 
@@ -128,7 +128,7 @@ int sys_whoami(char *name, unsigned int size)
 
 将新的源文件 `who.c` 添加到编译列表中，以确保它能够被编译并链接到内核中。因此，在 `OBJS` 变量中添加 `who.o`；同时，还需要添加依赖库`who.c`的依赖。如下图：
 
-![](.\images\Snipaste_2025-10-30_15-13-17.png)
+![](./images/Snipaste_2025-10-30_15-13-17.png)
 
 ![image-20251030151352280](C:\Users\Lenovo\AppData\Roaming\Typora\typora-user-images\image-20251030151352280.png)
 
@@ -216,7 +216,7 @@ gcc -o testlab2 testlab2.c
 
 接下来测试运行结果，如下图：
 
-![](.\images\Snipaste_2025-10-30_16-11-47.png)
+![](./images/Snipaste_2025-10-30_16-11-47.png)
 
 ## 4. 实验结果
 
@@ -224,13 +224,13 @@ gcc -o testlab2 testlab2.c
 
 结果如下，所有测试用例均通过：
 
-![](.\images\Snipaste_2025-10-30_16-17-00.png)
+![](./images/Snipaste_2025-10-30_16-17-00.png)
 
 #### 2. 将脚本 `oslab/files/testlab2.sh` 在修改过的 `Linux 0.11` 上运行
 
 结果如下，所有测试用例均通过：
 
-![](.\images\Snipaste_2025-10-30_16-17-15.png)
+![](./images/Snipaste_2025-10-30_16-17-15.png)
 
 ## 5. 问题回答
 
