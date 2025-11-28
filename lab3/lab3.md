@@ -8,7 +8,7 @@
 
 如下图，注释掉与`sustem`有关的命令。
 
-![](.\images\Snipaste_2025-10-21_12-35-06.png)
+![](./images/Snipaste_2025-10-21_12-35-06.png)
 
 ## 2. 实验内容完成流程
 
@@ -22,13 +22,13 @@ WangHao OS is booting...
 
 **实现：**阅读`bootsect.s`原本的代码，找到打印提示信息的代码段，如下图：
 
-![](.\images\Snipaste_2025-10-21_12-07-15.png)
+![](./images/Snipaste_2025-10-21_12-07-15.png)
 
 这里的`mov $24, %cx`中的 24 是显示信息的` ASCII` 码字符数
 
 `msg1`为原始打印信息，跳转找到它，如下图：
 
-![](.\images\Snipaste_2025-10-21_12-08-33.png)
+![](./images/Snipaste_2025-10-21_12-08-33.png)
 
 修改`msg1`中`.ascii`字段的内容为我自己的打印提示信息，然后计算字数，将显示信息的` ASCII` 码字符数修改为33.(27个输出信息字符+3个`\r\n`)，修改后代码为：
 
@@ -54,7 +54,7 @@ msg1:
 
 接下来重新编译并用`dbg-bochsgui`测试，结果截图如下：
 
-![](.\images\Snipaste_2025-10-21_12-35-50.png)
+![](./images/Snipaste_2025-10-21_12-35-50.png)
 
 ### 2.2. 改写 `setup.s`
 
@@ -95,7 +95,7 @@ Now we are in SETUP
 
    编译后测试效果如下：
 
-   ![](.\images\Snipaste_2025-10-21_12-55-26.png)
+   ![](./images/Snipaste_2025-10-21_12-55-26.png)
 
 #### **目标2：**
 
@@ -305,7 +305,7 @@ loop:
 
 最终，打印硬件参数的结果如下图所示：
 
-![](.\images\Snipaste_2025-10-21_14-05-29.png)
+![](./images/Snipaste_2025-10-21_14-05-29.png)
 
 
 
