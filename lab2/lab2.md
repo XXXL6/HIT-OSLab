@@ -15,11 +15,11 @@
 
 首先记录一下`system_interrupt`调用前的栈状态，以及代码执行情况与寄存器状态，如下图。
 
-![](.\images\Snipaste_2025-10-12_17-00-15.png)
+![](./images/Snipaste_2025-10-12_17-00-15.png)
 
 1. 进入`system_interrupt`，首先执行一系列压栈操作，如下图。
 
-   ![](.\images\Snipaste_2025-10-12_16-37-57.png)
+   ![](./images/Snipaste_2025-10-12_16-37-57.png)
 
 2. 然后让DS指向内核数据段（LDT表第三项），之后调用显示字符子程序 write_char，显示 AL 中的字符('A')，涉及代码如下。
 
@@ -31,17 +31,17 @@
 
 3. 接着准备返回，执行一些列出栈操作，如下图，寄存器正确恢复。
 
-   ![](.\images\Snipaste_2025-10-12_16-46-50.png)
+   ![](./images/Snipaste_2025-10-12_16-46-50.png)
 
 4. 执行`iret`指令。
 
 执行`iret`指令前，栈中从下到上保存的依次是：任务0的堆栈段选择符（`SS`），堆栈指针（`ESP`），标志寄存器的值（`EFLAGS`），任务0的代码段选择符（`CS`），代码指针（`EIP`）。如下图。
 
-![](.\images\Snipaste_2025-10-12_17-07-27.png)
+![](./images/Snipaste_2025-10-12_17-07-27.png)
 
 执行`iret`指令后，可以观察到栈和寄存器又恢复到`system_interrupt`被调用前的场景，`EIP`指向`int 0x80`的下一条语句继续执行代码。
 
-![](.\images\Snipaste_2025-10-12_17-01-40.png)
+![](./images/Snipaste_2025-10-12_17-01-40.png)
 
 因此，`iret`指令做了这样几件事情：
 
@@ -97,11 +97,11 @@
 
 首先寻找`timer_interrupt`程序的地址，在设置定时中断门描述符时，汇编代码中要取定时中断处理程序`timer_interrut`的地址，结合反汇编找到地址为`0x12a`，如下图。
 
-![](.\images\Snipaste_2025-10-12_17-58-16.png)
+![](./images/Snipaste_2025-10-12_17-58-16.png)
 
 在`0x12b`处打断点并执行到此处，见下图，可以看到已经显示了几个'A'，这说明task0开始执行了一会儿，并且当前CPU接收了时钟中断请求信号，将控制权切换到中断处理程序（CPL=0，切换到内核栈）。接下来执行`timer_interrupt`过程中会将CPU执行指令从task0切换到task1。
 
-![](.\images\Snipaste_2025-10-12_18-00-18.png)
+![](./images/Snipaste_2025-10-12_18-00-18.png)
 
 1. 首先，`timer_interrupt` 进入后把 `ds` 指向内核数据段，随后向8259A发送`EOI`命令，这会立即允许其他硬件中断（关中断）；然后通过 `movl $1, %eax; cmpl %eax, current` 判断要切换到哪一个任务，`current` 是全局变量，表示当前任务索引，定义在文件中。这部分汇编代码如下：
 
@@ -139,19 +139,19 @@
 
    单步执行到`ljmp $TSS1_SEL, $0`对应的二进制代码处，输入`info tss`查看并记录跳转前的系统TSS情况，如下图，根据base值可以看出，当前为task0的TSS0。
 
-   ![](.\images\Snipaste_2025-10-12_19-00-57.png)
+   ![](./images/Snipaste_2025-10-12_19-00-57.png)
 
    通过查看GDT表以及`dbg-bochs`注释也可以佐证这一点，如下图。
 
-   ![](.\images\Snipaste_2025-10-12_19-04-23.png)
+   ![](./images/Snipaste_2025-10-12_19-04-23.png)
 
    接下来执行该指令，程序跳转到`0x10f4`位置，如下图，此处正是`task1`的代码段，说明系统已由任务0切换到任务1。通过查看GDT表以及`dbg-bochs`注释，可以注意到当前系统TSS已经转移到task1的TSS1（显示为Busy 32bit TSS）。
 
-   ![](.\images\Snipaste_2025-10-14_19-07-47.png)
+   ![](./images/Snipaste_2025-10-14_19-07-47.png)
 
    输入`info tss`查看跳转后的系统TSS情况，如下图，根据base值可以看出，当前为task1的TSS1。
 
-   ![](.\images\Snipaste_2025-10-14_19-04-03.png)
+   ![](./images/Snipaste_2025-10-14_19-04-03.png)
 
    
 
@@ -159,21 +159,21 @@
 
 根据上一问中的分析，可以得知任务1运行10ms后CPU会再次接收时钟中断请求信号，并进入`timer_interrupt`程序，此时可以看到屏幕上多了几个字符`B`，如下图。
 
-![](.\images\Snipaste_2025-10-14_19-17-43.png)
+![](./images/Snipaste_2025-10-14_19-17-43.png)
 
 由于当前执行的为任务1，故从任务1切换回到任务0 的关键步骤在`0x15c`指令处，在`0x15c`地址打断点并执行到此处，记录下此时的系统TSS和寄存器情况，如下图。
 
-![](.\images\Snipaste_2025-10-14_19-21-30.png)
+![](./images/Snipaste_2025-10-14_19-21-30.png)
 
-![](.\images\Snipaste_2025-10-14_19-18-54.png)
+![](./images/Snipaste_2025-10-14_19-18-54.png)
 
 可以看到TSS与寄存器内容相同（红色字体），说明已经将 task1 的上下文保存在 task1 的TSS中。 然后执行 `jmpf 0x0020:0` ，将一个 TSS 选择子（`0x20`）装入 CS，即task0 的TSS，由于第一次任务切换时将寄存器现场保存到了 task0 的TSS0里，因此将TSS切换回来后，`CS:EIP` 会指向第一次任务切换的下一条地址，即`0x8:0x150`。如下图，展示了切换后的寄存器情况，代码执行位置，GDT表情况。
 
-![](.\images\Snipaste_2025-10-14_19-24-44.png)
+![](./images/Snipaste_2025-10-14_19-24-44.png)
 
 输入`info tss`查看具体的系统TSS情况，如下图。
 
-![](.\images\Snipaste_2025-10-14_19-26-22.png)
+![](./images/Snipaste_2025-10-14_19-26-22.png)
 
 可以看到TSS为task0的TSS0，并且里面保存着第一次切换时的现场，与当前的寄存器值相对应（红色字体）。
 
